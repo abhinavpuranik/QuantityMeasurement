@@ -61,4 +61,11 @@ public class QuantityMeasurementController {
     {
     	return repository.findAll();
     }
+
+    @GetMapping("/success")
+    public String success(){
+        return "success";
+        
+    }
+    
 } 
