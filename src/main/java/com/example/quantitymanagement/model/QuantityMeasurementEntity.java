@@ -143,8 +143,7 @@ public class QuantityMeasurementEntity {
     	this.errorMessage = errorMessage;
     	this.isError = isError;
 }
-    public QuantityMeasurementEntity() {
-    }
+  
     
 	
 	
