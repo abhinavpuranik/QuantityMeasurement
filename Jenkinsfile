@@ -28,11 +28,11 @@ pipeline {
 
                     echo "Copying jar to backend server..."
 
-                    scp target/*.jar ubuntu@3.144.138.183:/tmp/app.jar
+                    scp target/*.jar ubuntu@172.31.47.181:/tmp/app.jar
 
                     echo "Restarting backend service..."
 
-                    ssh ubuntu@3.144.138.183 << EOF
+                    ssh ubuntu@172.31.47.181 << EOF
 
                     sudo mv /tmp/app.jar /opt/quantity-app/demo-0.0.1-SNAPSHOT.jar
 
