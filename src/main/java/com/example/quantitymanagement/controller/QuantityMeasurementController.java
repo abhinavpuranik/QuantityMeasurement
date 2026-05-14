@@ -64,7 +64,7 @@ public class QuantityMeasurementController {
 
     @GetMapping("/success")
     public String success(){
-        return "success";
+        return "successful";
         
     }
     
