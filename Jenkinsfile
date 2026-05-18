@@ -1,38 +1,57 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "quantity-backend"
+        ECR_REPO = "193281220099.dkr.ecr.us-east-2.amazonaws.com/springboot-app"
+        AWS_REGION = "us-east-2"
+    }
+
     stages {
 
-        stage('Build') {
+        stage('Build Jar') {
             steps {
                 sh '''
                     set -e
-
-                    echo "Java Version:"
-                    java -version
-
-                    echo "Maven Version:"
-                    mvn -version
-
-                    echo "Building application..."
 
                     mvn clean package -DskipTests
                 '''
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
                 sh '''
                     set -e
 
-                    echo "Copying jar to backend server..."
+                    docker build -t $IMAGE_NAME .
+                '''
+            }
+        }
 
-                    scp target/demo-0.0.1-SNAPSHOT.jar ubuntu@172.31.47.181:/tmp/app.jar
+        stage('Login To ECR') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region $AWS_REGION | \
+                    docker login \
+                    --username AWS \
+                    --password-stdin 193281220099.dkr.ecr.us-east-2.amazonaws.com
+                '''
+            }
+        }
 
-                    echo "Deploying application..."
+        stage('Tag Docker Image') {
+            steps {
+                sh '''
+                    docker tag $IMAGE_NAME:latest $ECR_REPO:latest
+                '''
+            }
+        }
 
-                    ssh ubuntu@172.31.47.181 "sudo mv /tmp/app.jar /opt/quantity-app/demo-0.0.1-SNAPSHOT.jar && sudo systemctl restart quantityapp && sudo systemctl status quantityapp --no-pager"
+        stage('Push Docker Image') {
+            steps {
+                sh '''
+                    docker push $ECR_REPO:latest
                 '''
             }
         }
