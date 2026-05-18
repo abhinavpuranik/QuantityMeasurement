@@ -55,26 +55,27 @@ pipeline {
                 '''
             }
         }
+
         stage('Deploy To Server') {
-    steps {
-        sh '''
-            ssh ubuntu@3.145.58.208 << EOF
+            steps {
+                sh '''
+                    ssh ubuntu@172.31.6.78 << EOF
 
-            aws ecr get-login-password --region us-east-2 | \
-            docker login \
-            --username AWS \
-            --password-stdin 193281220099.dkr.ecr.us-east-2.amazonaws.com
+                    aws ecr get-login-password --region us-east-2 | \
+                    docker login \
+                    --username AWS \
+                    --password-stdin 193281220099.dkr.ecr.us-east-2.amazonaws.com
 
-            cd ~/QuantityMeasurement
+                    cd ~/QuantityMeasurement
 
-            docker compose pull
+                    docker compose pull
 
-            docker compose up -d
+                    docker compose up -d
 
-            EOF
-        '''
-    }
-}
+EOF
+                '''
+            }
+        }
 
     }
 }
