@@ -59,7 +59,7 @@ pipeline {
         stage('Deploy To Server') {
             steps {
                 sh '''
-                    ssh ubuntu@172.31.6.78 << EOF
+                    ssh ubuntu@3.145.58.208 << EOF
 
                     aws ecr get-login-password --region us-east-2 | \
                     docker login \
